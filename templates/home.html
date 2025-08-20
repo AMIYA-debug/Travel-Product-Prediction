@@ -1,0 +1,276 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Product Prediction Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-row {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .form-group.half {
+            flex: 1;
+            min-width: 200px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        input:focus, select:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: transform 0.3s ease;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .result.positive {
+            background-color: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+        .result.negative {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+        }
+        .back-btn {
+            background: #6c757d;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+        .back-btn:hover {
+            background: #5a6268;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-btn">← Back to Home</a>
+        <h1>Travel Product Prediction Form</h1>
+        
+        {% if prediction_result %}
+        <div class="result {% if 'Will Take' in prediction_result %}positive{% else %}negative{% endif %}">
+            <h3>Prediction Result: {{ prediction_result }}</h3>
+            {% if probability %}
+            <p>Probability: {{ probability }}%</p>
+            {% endif %}
+        </div>
+        {% endif %}
+        
+        <form method="POST" action="/predict">
+            <div class="form-row">
+                <div class="form-group half">
+                    <label for="age">Age:</label>
+                    <input type="number" id="age" name="age" step="0.1" required>
+                </div>
+                <div class="form-group half">
+                    <label for="type_of_contact">Type of Contact:</label>
+                    <select id="type_of_contact" name="type_of_contact" required>
+                        <option value="">Select...</option>
+                        <option value="Self Enquiry">Self Enquiry</option>
+                        <option value="Company Invited">Company Invited</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group half">
+                    <label for="city_tier">City Tier:</label>
+                    <select id="city_tier" name="city_tier" required>
+                        <option value="">Select...</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                    </select>
+                </div>
+                <div class="form-group half">
+                    <label for="duration_of_pitch">Duration of Pitch (minutes):</label>
+                    <input type="number" id="duration_of_pitch" name="duration_of_pitch" step="0.1" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group half">
+                    <label for="occupation">Occupation:</label>
+                    <select id="occupation" name="occupation" required>
+                        <option value="">Select...</option>
+                        <option value="Salaried">Salaried</option>
+                        <option value="Small Business">Small Business</option>
+                        <option value="Free Lancer">Free Lancer</option>
+                        <option value="Large Business">Large Business</option>
+                    </select>
+                </div>
+                <div class="form-group half">
+                    <label for="gender">Gender:</label>
+                    <select id="gender" name="gender" required>
+                        <option value="">Select...</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group half">
+                    <label for="number_of_followups">Number of Followups:</label>
+                    <input type="number" id="number_of_followups" name="number_of_followups" step="0.1" required>
+                </div>
+                <div class="form-group half">
+                    <label for="product_pitched">Product Pitched:</label>
+                    <select id="product_pitched" name="product_pitched" required>
+                        <option value="">Select...</option>
+                        <option value="Basic">Basic</option>
+                        <option value="Standard">Standard</option>
+                        <option value="Deluxe">Deluxe</option>
+                        <option value="Super Deluxe">Super Deluxe</option>
+                        <option value="King">King</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group half">
+                    <label for="preferred_property_star">Preferred Property Star:</label>
+                    <select id="preferred_property_star" name="preferred_property_star" required>
+                        <option value="">Select...</option>
+                        <option value="3.0">3 Star</option>
+                        <option value="4.0">4 Star</option>
+                        <option value="5.0">5 Star</option>
+                    </select>
+                </div>
+                <div class="form-group half">
+                    <label for="marital_status">Marital Status:</label>
+                    <select id="marital_status" name="marital_status" required>
+                        <option value="">Select...</option>
+                        <option value="Married">Married</option>
+                        <option value="Unmarried">Unmarried</option>
+                        <option value="Divorced">Divorced</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group half">
+                    <label for="number_of_trips">Number of Trips:</label>
+                    <input type="number" id="number_of_trips" name="number_of_trips" step="0.1" required>
+                </div>
+                <div class="form-group half">
+                    <label for="passport">Passport:</label>
+                    <select id="passport" name="passport" required>
+                        <option value="">Select...</option>
+                        <option value="1">Yes</option>
+                        <option value="0">No</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group half">
+                    <label for="pitch_satisfaction_score">Pitch Satisfaction Score:</label>
+                    <select id="pitch_satisfaction_score" name="pitch_satisfaction_score" required>
+                        <option value="">Select...</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </div>
+                <div class="form-group half">
+                    <label for="own_car">Own Car:</label>
+                    <select id="own_car" name="own_car" required>
+                        <option value="">Select...</option>
+                        <option value="1">Yes</option>
+                        <option value="0">No</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group half">
+                    <label for="designation">Designation:</label>
+                    <select id="designation" name="designation" required>
+                        <option value="">Select...</option>
+                        <option value="Executive">Executive</option>
+                        <option value="Manager">Manager</option>
+                        <option value="Senior Manager">Senior Manager</option>
+                        <option value="AVP">AVP</option>
+                        <option value="VP">VP</option>
+                    </select>
+                </div>
+                <div class="form-group half">
+                    <label for="monthly_income">Monthly Income:</label>
+                    <input type="number" id="monthly_income" name="monthly_income" step="0.01" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="total_visiting">Total Visiting:</label>
+                <input type="number" id="total_visiting" name="total_visiting" step="0.1" required>
+            </div>
+
+            <button type="submit" class="btn">Predict</button>
+        </form>
+    </div>
+</body>
+</html>
