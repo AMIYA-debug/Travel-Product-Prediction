@@ -11,7 +11,7 @@ To improve efficiency, I used **Machine Learning (AdaBoost Algorithm)** to ident
 - AI-powered prediction of customer interest in travel packages.  
 - Uses **AdaBoost Algorithm** for accurate classification.  
 - Interactive web-based UI for user convenience.  
-- Premium, modern design for better user engagement.  
+
 
 ---
 
